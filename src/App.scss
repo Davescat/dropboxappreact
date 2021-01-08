@@ -1,0 +1,103 @@
+.dropform {
+  display: flex;
+  flex-direction: column;
+  width: 745px;
+  height: 100vh !important;
+}
+
+.flex-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .field:last-child {
+    margin-top: auto;
+  }
+}
+
+.hidden-tab {
+  height: 100% !important;
+  > .ui.menu {
+    display: none;
+  }
+  > .segment {
+    height: 100% !important;
+  }
+}
+.ui.form {
+  > div {
+    // margin-bottom: 8px !important;
+  }
+}
+
+i.approve-icon{
+  vertical-align: bottom;
+  font-size: 2em;
+}
+
+.tab-switch {
+  i {
+    color: darkgray;
+    &:hover {
+      color: gray;
+    }
+    &:active {
+      color: black;
+    }
+  }
+  border-bottom-color: rgb(212, 212, 213);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  padding: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  font-size: 1.4em;
+  &.first {
+    flex-direction: row-reverse;
+  }
+}
+
+hr {
+  margin-bottom: 16px;
+  height: 1px;
+  border: none;
+  background-color: rgb(212, 212, 213);
+}
+.csv-reader-input {
+  padding: 8px 0px 12px 0px;
+}
+
+.form-col {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  // border-bottom-color: rgb(212, 212, 213);
+  // border-bottom-style: solid;
+  // border-bottom-width: 1px;
+}
+.form-row {
+  // margin-bottom: 16px;
+}
+
+@media only screen and (min-width: 768px) {
+  .dropform {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 745px;
+  }
+  .form-col:first-child {
+    border-right-color: rgb(212, 212, 213);
+    border-right-style: solid;
+    border-right-width: 1px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .dropform {
+    width: auto;
+  }
+  .form-col:first-child {
+    border-bottom-color: rgb(212, 212, 213);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+  }
+}
