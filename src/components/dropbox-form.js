@@ -7,7 +7,7 @@ export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, set
 
     const validate = () => {
         isUserValid(formData.dropboxAccessKey).then(setDropboxValidated);
-        console.log(process.env)
+        alert(JSON.stringify(process.env));
     }
 
     return (
@@ -31,7 +31,7 @@ export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, set
             />
             <Button
                 onClick={() => validate()}>
-                Validate Dropbox account
+                Validate Dropbox accounts
             </Button> <Icon className='approve-icon' name={dropboxValidated ? 'check' : 'x'} color={dropboxValidated ? 'green' : 'red'} />
 
         </Form>
