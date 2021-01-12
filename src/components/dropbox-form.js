@@ -7,7 +7,6 @@ export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, set
 
     const validate = () => {
         isUserValid(formData.dropboxAccessKey).then(setDropboxValidated);
-        alert(JSON.stringify(process.env));
     }
 
     return (
