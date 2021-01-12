@@ -6,7 +6,8 @@ import { isUserValid } from './utils/dropbox-utils';
 export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, setDropboxValidated }) => {
 
     const validate = () => {
-        isUserValid(formData.dropboxAccessKey).then(setDropboxValidated)
+        isUserValid(formData.dropboxAccessKey).then(setDropboxValidated);
+        console.log(process.env)
     }
 
     return (
