@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CSVForm } from './csv-form';
-import { Grid,Progress,  } from 'semantic-ui-react';
+import { Grid, Progress } from 'semantic-ui-react';
 import { downloadFromLink, downloadFromPath, getDropboxFilesInFolder, getDropboxFolderList } from './utils/dropbox-utils';
 import { upload, getS3FolderList } from './utils/s3-utils';
 import { FolderMove } from './folder-move';
@@ -50,14 +50,12 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
         setProgressActive(true)
         setProgress(0);
 
-        // data.forEach(async (fileInfo) =>
         for (let index = 0; index < data.length; index++) {
             const fileData = await downloadFromLink(formData.dropboxAccessKey, data[index].url);
-            // log(`Downloaded file: ${fileData.result.name}`)
             const { fileBlob, name } = fileData.result;
+
             const results = await upload(formData, fileBlob, `${moveData.s3Path}${name}`, data[index].tagset)
             if (results && results.Key) {
-                // log(`Uploaded file ${results.Key}`)
                 log(`${(index + 1)} of ${data.length - 1}`)
                 setProgress(Math.floor(((index + 1) / (data.length - 1)) * 100))
             } else {

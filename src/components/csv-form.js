@@ -48,7 +48,7 @@ export const CSVForm = ({
             <CSVReader disabled={!credentialsValid} cssClass='field' label='Csv for Multi-Upload' cssInputClass='ui button' parserOptions={{ header: true }} onFileLoaded={setCsv} />
             <Form.Select
                 disabled={!credentialsValid || !csv}
-                required={moveData.s3Path===''}
+                required={moveData.s3Path === ''}
                 options={s3List ? s3List : []}
                 loading={!s3List}
                 search
@@ -63,14 +63,14 @@ export const CSVForm = ({
                 disabled={!credentialsValid || !csv}
                 label={'Column used for Dropbox Url'}
                 onChange={(event, data) => setUrl(data.value)}
-                options={csv ? Object.keys(csv[1]).map(key => ({ text: key, value: key })) : []}
+                options={csv ? Object.keys(csv[0]).map(key => ({ text: key, value: key })) : []}
             />
             <Form.Select
                 label={'Column(s) to be included for tagging'}
                 multiple
                 disabled={!credentialsValid || !csv}
                 onChange={(event, data) => setTagKeys(data.value)}
-                options={csv ? Object.keys(csv[1]).map(key => ({ text: key, value: key })) : []}
+                options={csv ? Object.keys(csv[0]).map(key => ({ text: key, value: key })) : []}
             />
             <Form.Button
                 disabled={!credentialsValid || !csv}
