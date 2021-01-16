@@ -23,10 +23,10 @@
     height: 100% !important;
   }
 }
-.ui.form {
-  > div {
-    // margin-bottom: 8px !important;
-  }
+.validate-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 i.approve-icon{

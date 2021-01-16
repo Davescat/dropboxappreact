@@ -7,7 +7,7 @@ import { FilesMover } from './components/files-move';
 
 
 function App() {
-  const [tabIndex, setTabIndex] = useState(0  )
+  const [tabIndex, setTabIndex] = useState(0);
   const [s3Validated, setS3Validated] = useState(false);
   const [dropboxValidated, setDropboxValidated] = useState(false);
 
