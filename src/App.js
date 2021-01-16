@@ -7,7 +7,7 @@ import { FilesMover } from './components/files-move';
 
 
 function App() {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(window.location.hash.split('&').reduce((prev, curr) => { prev[curr.split('=')[0]] = curr.split('=')[1]; return prev; }, []).access_token ? 1 : 0);
   const [s3Validated, setS3Validated] = useState(false);
   const [dropboxValidated, setDropboxValidated] = useState(false);
 
