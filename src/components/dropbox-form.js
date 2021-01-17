@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Icon } from 'semantic-ui-react';
 import { isUserValid } from './utils/dropbox-utils';
+
 export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, setDropboxValidated }) => {
 
     const [url, setUrl] = useState(`https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${process.env.REACT_APP_DP_APPKEY}&redirect_uri=${window.location.origin}/`);

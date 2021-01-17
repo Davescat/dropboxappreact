@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
 import { Segment, Step, Tab, Icon, Message } from 'semantic-ui-react';
 import { S3Form } from './components/s3-form';
@@ -7,7 +7,7 @@ import { FilesMover } from './components/files-move';
 
 
 function App() {
-  const [tabIndex, setTabIndex] = useState(window.location.hash.split('&').reduce((prev, curr) => { prev[curr.split('=')[0]] = curr.split('=')[1]; return prev; }, []).access_token ? 1 : 0);
+  const [tabIndex, setTabIndex] = useState(0);
   const [s3Validated, setS3Validated] = useState(false);
   const [dropboxValidated, setDropboxValidated] = useState(false);
 
@@ -16,12 +16,26 @@ function App() {
     accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_SECRETACCESS_KEY_ID,
     region: process.env.REACT_APP_AWS_REGION,
-    dropboxAccessKey: process.env.REACT_APP_DP_ACCESSKEY
+    dropboxAccessKey: process.env.REACT_APP_DP_ACCESSKEY,
+    rememberMe: localStorage.rememberMe === 'true'
   });
   const [moveData, setMoveData] = useState({
     s3Path: '',
     dropboxPath: ''
-  })
+  });
+
+  useEffect(() => {
+    if (localStorage.rememberMe === 'true') {
+      setFormData({
+        ...formData,
+        bucketName: localStorage.bucketName,
+        accessKeyId: localStorage.accessKeyId,
+        secretAccessKey: localStorage.secretAccessKey,
+        selectedRegion: localStorage.selectedRegion
+      });
+    }
+  }, []);
+
   const handleMoveChange = (event, { name, value }) => {
     setMoveData((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -34,11 +48,11 @@ function App() {
     <Segment className='dropform'>
       <Step.Group fluid>
         <Step active={tabIndex === 0}>
-          <Step.Title>S3</Step.Title>
+          <Step.Title>Dropbox</Step.Title>
           <Step.Description>Enter Credentials</Step.Description>
         </Step>
         <Step active={tabIndex === 1}>
-          <Step.Title>Dropbox</Step.Title>
+          <Step.Title>S3</Step.Title>
           <Step.Description>Enter Credentials</Step.Description>
         </Step>
         <Step active={tabIndex === 2}>
@@ -48,23 +62,9 @@ function App() {
       </Step.Group>
       <Tab activeIndex={tabIndex} className='hidden-tab' menu={{ tabular: false }} panes={[
         {
-          menuItem: 'Tab 1', render: () => (<Tab.Pane >
+          menuItem: 'Tab 1', render: () => (<Tab.Pane>
             <div className='tab-switch first'>
               <Icon circular name={'arrow right'} onClick={() => setTabIndex(1)} />
-            </div>
-            <S3Form
-              formData={{ ...formData }}
-              handleFieldChange={handleFieldChange}
-              s3Validated={s3Validated}
-              setS3Validated={setS3Validated}
-            ></S3Form>
-          </Tab.Pane>)
-        },
-        {
-          menuItem: 'Tab 2', render: () => (<Tab.Pane>
-            <div className='tab-switch'>
-              <Icon circular name={'arrow left'} onClick={() => setTabIndex(0)} />
-              <Icon circular name={'arrow right'} onClick={() => setTabIndex(2)} />
             </div>
             <DropBoxForm
               formData={{ ...formData }}
@@ -73,6 +73,20 @@ function App() {
               setDropboxValidated={setDropboxValidated}
             ></DropBoxForm>
 
+          </Tab.Pane>)
+        },
+        {
+          menuItem: 'Tab 2', render: () => (<Tab.Pane >
+            <div className='tab-switch'>
+              <Icon circular name={'arrow left'} onClick={() => setTabIndex(0)} />
+              <Icon circular name={'arrow right'} onClick={() => setTabIndex(2)} />
+            </div>
+            <S3Form
+              formData={{ ...formData }}
+              handleFieldChange={handleFieldChange}
+              s3Validated={s3Validated}
+              setS3Validated={setS3Validated}
+            ></S3Form>
           </Tab.Pane>)
         },
         {
