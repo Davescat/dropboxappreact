@@ -15,9 +15,7 @@ export const DropBoxForm = ({ formData, handleFieldChange, dropboxValidated, set
 
     useEffect(() => {
         const value = getParams().access_token;
-        console.log(value);
         if (value) {
-            console.log('feet');
             handleFieldChange(null, { name: "dropboxAccessKey", value });
             isUserValid(value).then(setDropboxValidated);
         }
