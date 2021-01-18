@@ -24,15 +24,41 @@ function App() {
     dropboxPath: ''
   });
 
+  const getParams = () => {
+    let query = window.location.hash.split('&').reduce((prev, curr) => { prev[curr.split('=')[0]] = curr.split('=')[1]; return prev; }, [])
+    return query;
+  };
+
   useEffect(() => {
+    const value = getParams().access_token;
     if (localStorage.rememberMe === 'true') {
-      setFormData({
-        ...formData,
-        bucketName: localStorage.bucketName,
-        accessKeyId: localStorage.accessKeyId,
-        secretAccessKey: localStorage.secretAccessKey,
-        selectedRegion: localStorage.selectedRegion
-      });
+      if (value) {
+        console.log('feet');
+        setFormData({
+          ...formData,
+          dropboxAccessKey: value,
+          bucketName: localStorage.bucketName,
+          accessKeyId: localStorage.accessKeyId,
+          secretAccessKey: localStorage.secretAccessKey,
+          selectedRegion: localStorage.selectedRegion
+        });
+      } else {
+        setFormData({
+          ...formData,
+          bucketName: localStorage.bucketName,
+          accessKeyId: localStorage.accessKeyId,
+          secretAccessKey: localStorage.secretAccessKey,
+          selectedRegion: localStorage.selectedRegion
+        });
+      }
+    } else {
+      if (value) {
+        console.log('feet');
+        setFormData({
+          ...formData,
+          dropboxAccessKey: value
+        });
+      }
     }
   }, []);
 
