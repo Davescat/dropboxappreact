@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CSVForm } from './csv-form';
-import { Grid, Progress } from 'semantic-ui-react';
+import { Grid, Message, Progress } from 'semantic-ui-react';
 import { downloadFromLink, downloadFromPath, getDropboxFilesInFolder, getDropboxFolderList } from './utils/dropbox-utils';
 import { upload, getS3FolderList } from './utils/s3-utils';
 import { FolderMove } from './folder-move';
@@ -12,7 +12,7 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
     const [progressActive, setProgressActive] = useState(false)
     const [s3List, setS3List] = useState(null);
     const [dropboxList, setDropboxList] = useState(null);
-
+    const [error, setError] = useState([])
 
     useEffect(() => {
         if (!s3List) {
@@ -39,7 +39,7 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
                         setProgressActive(false)
                     }
                 } else {
-                    throw new Error("Error while uploading to S3")
+                    throw new Error(name, "Error while uploading to S3")
 
                 }
             })
@@ -47,29 +47,39 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
     }
 
     const uploadCsvInput = async (data) => {
+        setError([]);
         setProgressActive(true)
         setProgress(0);
 
         for (let index = 0; index < data.length; index++) {
-            const fileData = await downloadFromLink(formData.dropboxAccessKey, data[index].url);
-            const { fileBlob, name } = fileData.result;
-
-            const results = await upload(formData, fileBlob, `${moveData.s3Path}${name}`, data[index].tagset)
-            if (results && results.Key) {
-                log(`${(index + 1)} of ${data.length - 1}`)
-                setProgress(Math.floor(((index + 1) / (data.length - 1)) * 100))
-            } else {
-                throw new Error("Error while uploading to S3")
-
+            try {
+                const fileData = await downloadFromLink(formData.dropboxAccessKey, data[index].url);
+                const { fileBlob, name } = fileData.result;
+                const results = await upload(formData, fileBlob, `${moveData.s3Path}${name}`, data[index].tagset)
+                if (results && results.Key) {
+                    log(`${(index + 1)} of ${data.length - 1}`)
+                    setProgress(Math.floor(((index + 1) / (data.length - 1)) * 100))
+                } else {
+                    throw new Error("Error while uploading to S3")
+                }
+            } catch (e) {
+                setError([...error, (<div><b>{data[index].url}</b> Something wrong upload!</div>)]);
+                console.log(data[index], e);
             }
         }
         setProgressActive(false)
     }
 
     return (
-
         <Grid
             className='form-grid'>
+            {error.length > 0 && (<Grid.Row>
+                <Grid.Column>
+                    <Message negative>
+                        {error}
+                    </Message>
+                </Grid.Column>
+            </Grid.Row>)}
             <Grid.Row
                 className='form-row'>
                 <Grid.Column
@@ -105,6 +115,7 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
                         handleMoveChange={handleMoveChange}
                         moveData={{ ...moveData }}
                         formData={{ ...formData }}
+                        setError={setError}
                     />
                 </Grid.Column>
             </Grid.Row>
@@ -115,6 +126,5 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
                 </Grid.Column>
             </Grid.Row>
         </Grid>
-
     )
 }

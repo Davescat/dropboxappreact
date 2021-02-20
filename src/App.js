@@ -33,7 +33,6 @@ function App() {
     const value = getParams().access_token;
     if (localStorage.rememberMe === 'true') {
       if (value) {
-        console.log('feet');
         setFormData({
           ...formData,
           dropboxAccessKey: value,
@@ -53,7 +52,6 @@ function App() {
       }
     } else {
       if (value) {
-        console.log('feet');
         setFormData({
           ...formData,
           dropboxAccessKey: value

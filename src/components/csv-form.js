@@ -8,6 +8,7 @@ export const CSVForm = ({
     handleMoveChange,
     moveData,
     credentialsValid,
+    setError
 
 }) => {
     const [csv, setCsv] = useState(null)
@@ -32,11 +33,29 @@ export const CSVForm = ({
         return encodedStr;
     }
 
+    const validateInput = () => {
+        const reggy = /^[^\s][\w\d\-+=._:\/@ ]*[^\s]$/;
+        const errorList = csv.reduce((prev, row, i) => {
+            if (!(tagKeys.every((value) => row[value] === '' ? true : reggy.test(row[value].trim()))
+            )) {
+                prev.push(<div><b>Line {i + 2}:</b> Error with following tag(s): {(tagKeys.filter((value) => row[value] === '' ? false : !reggy.test(row[value].trim())))}</div>)
+            }
+            return prev
+        }, [])
+        if (errorList && errorList.length > 0) {
+            errorList.push(<div>Please make sure each tag value has no spaces before or after and only include letters, numbers, and spaces representable in UTF-8, and the following characters: + - = . _ : / @.</div>)
+            setError(errorList);
+        } else {
+            setError([]);
+            uploadCsvInput(parseInput());
+        }
+    }
+
     const parseInput = () => {
         const list = csv.map((row) => ({
             url: row[url],
             tagset: tagKeys.reduce((val, tag, i) => {
-                return `${val ? val : ''}${i === 0 ? '' : '&'}${superEncodeURI(tag)}=${superEncodeURI(row[tag] ? row[tag] : '')}`
+                return `${val ? val : ''}${i === 0 ? '' : '&'}${superEncodeURI(tag)}=${superEncodeURI(row[tag] ? row[tag].trim() : '')}`
             }, '')
         })
         );
@@ -74,7 +93,7 @@ export const CSVForm = ({
             />
             <Form.Button
                 disabled={!credentialsValid || !csv}
-                onClick={() => uploadCsvInput(parseInput())}
+                onClick={() => (validateInput())}
                 children={'Upload list'}
             />
         </Form>
