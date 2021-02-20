@@ -57,13 +57,13 @@ export const FilesMover = ({ formData, moveData, handleMoveChange, credentialsVa
                 const { fileBlob, name } = fileData.result;
                 const results = await upload(formData, fileBlob, `${moveData.s3Path}${name}`, data[index].tagset)
                 if (results && results.Key) {
-                    log(`${(index + 1)} of ${data.length - 1}`)
+                    log(`${(index + 1)} of ${data.length}`)
                     setProgress(Math.floor(((index + 1) / (data.length - 1)) * 100))
                 } else {
                     throw new Error("Error while uploading to S3")
                 }
             } catch (e) {
-                setError([...error, (<div><b>{data[index].url}</b> Something wrong upload!</div>)]);
+                setError([(<div><b>{data[index].url}</b> Something wrong with this upload!</div>)]);
                 console.log(data[index], e);
             }
         }
